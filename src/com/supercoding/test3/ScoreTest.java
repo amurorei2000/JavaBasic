@@ -20,11 +20,24 @@ public class ScoreTest {
         students.add(new Student("공유", "남자", 80));
 
         //남학생들 중 가장 낮은 성적을 가진 학생의 이름 출력하기
+        String foundName = students.stream()
+                .filter(st -> st.getGender().equals("남자"))
+                .sorted((st1, st2) -> st1.getScore() - st2.getScore())
+                .map(Student::getName)
+                .findFirst()
+                        .orElseGet(() -> "학생이 없음");
 
-        System.out.printf("가장 성적이 낮은 남학생 이름: %s\n");
+        System.out.printf("가장 성적이 낮은 남학생 이름: %s%n", foundName);
 
         //여학생들 중 성적 상위 3명의 평균 성적 구하기
+        Double averageScore = students.stream()
+                .filter(st -> st.getGender().equals("여자"))
+                .map(Student::getScore)
+                .sorted((st1, st2) -> st2 - st1)
+                .limit(3)
+                .mapToInt(i -> i)
+                .average().orElseGet(() -> 0);
 
-        System.out.printf("여학생 상위 3명 평균: %.2f\n");
+        System.out.printf("여학생 상위 3명 평균: %.2f%n", averageScore);
     }
 }
